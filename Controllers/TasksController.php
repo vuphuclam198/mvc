@@ -4,13 +4,21 @@ namespace Aht\Controllers;
 
 use Aht\Core\Controller;
 use Aht\Models\Task;
+use Aht\Models\TaskRepository;
+use Aht\Core\ResourceModel;
 
 class TasksController extends Controller
 {
+
+    protected $taskRepository;
+
+    public function __construct(){
+        $this->taskRepository = new taskRepository();
+    }   
+
     function index()
     {
-        $tasks = new Task();
-        $d['tasks'] = $tasks->showAllTasks();
+        $d['tasks'] = $this->taskRepository->getAll();
         $this->set($d);
         $this->render("index");
     }
@@ -34,10 +42,8 @@ class TasksController extends Controller
 
     function edit($id)
     {
-        require(ROOT . 'Models/Task.php');
-        $task= new Task();
-
-        $d["task"] = $task->showTask($id);
+        $task = new Task();
+        $d["task"] = $this->taskRepository->get($id);
 
         if (isset($_POST["title"]))
         {
@@ -52,10 +58,7 @@ class TasksController extends Controller
 
     function delete($id)
     {
-        require(ROOT . 'Models/Task.php');
-
-        $task = new Task();
-        if ($task->delete($id))
+        if ($this->taskRepository->delete($id))
         {
             header("Location: " . WEBROOT . "tasks/index");
         }
