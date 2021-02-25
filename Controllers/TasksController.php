@@ -3,7 +3,7 @@
 namespace Aht\Controllers;
 
 use Aht\Core\Controller;
-use Aht\Models\Task;
+use Aht\Models\TaskModel;
 use Aht\Models\TaskRepository;
 use Aht\Core\ResourceModel;
 
@@ -27,11 +27,12 @@ class TasksController extends Controller
     {
         if (isset($_POST["title"]))
         {
-            require(ROOT . 'Models/Task.php');
 
-            $task= new Task();
+            $task= new TaskModel();
+            $task->setTitle($_POST["title"]);
+            $task->setDesc($_POST["description"]);
 
-            if ($task->create($_POST["title"], $_POST["description"]))
+            if ($this->taskRepository->add($task))
             {
                 header("Location: " . WEBROOT . "tasks/index");
             }
@@ -42,12 +43,17 @@ class TasksController extends Controller
 
     function edit($id)
     {
-        $task = new Task();
+        // list ọbject with getId();
         $d["task"] = $this->taskRepository->get($id);
 
         if (isset($_POST["title"]))
         {
-            if ($task->edit($id, $_POST["title"], $_POST["description"]))
+            $taskModel = new TaskModel();
+            $taskModel->setId($id);
+            $taskModel->setTitle($_POST["title"]);
+            $taskModel->setDesc($_POST["description"]);
+            
+            if ($this->taskRepository->update($taskModel))
             {
                 header("Location: " . WEBROOT . "tasks/index");
             }

@@ -8,6 +8,6 @@ use Aht\Core\ResourceModel;
 class TaskResourceModel extends ResourceModel
 {
     function __construct(){
-        parent::_init("tasks", 'id', new TaskModel());
+        parent::_init('tasks', null, new TaskModel());
     }
 }
