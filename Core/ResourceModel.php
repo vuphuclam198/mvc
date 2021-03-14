@@ -20,7 +20,6 @@ class ResourceModel implements ResourceModelInterface
         $this->model = $model;
         $this->id    = $id;
 
-        // var_dump($model);
     }
 
     public function save($model)
@@ -34,22 +33,20 @@ class ResourceModel implements ResourceModelInterface
         if ($model->getId() === null) {
             foreach ($properties as $key=>$value) {
                 array_push($keyProperties, $key);
-                array_push($PropertiesValue, ':' . $key);
+                array_push($PropertiesValue, "'$value'");
             }
 
             $string_properties = implode(',', $PropertiesValue);
             $string_key = implode(',', $keyProperties);
-
             $sql = "INSERT INTO $this->table ($string_key) VALUES ($string_properties)";
             $req = Database::getBdd()->prepare($sql);
-    
-            return $req->execute($properties);
+            return $req->execute();
 
         }else {
                 $id = $model->getId();
 
                 foreach($properties as $key=>$value) {
-                    array_push($updateProperties,$key . '= :'.$key);
+                    array_push($updateProperties,$key . '= '."'$value'");
                 }
 
                 $columns = implode(',', $updateProperties);
@@ -57,7 +54,7 @@ class ResourceModel implements ResourceModelInterface
                 $sql = "UPDATE $this->table SET $columns WHERE id = $id";
                 $req = Database::getBdd()->prepare($sql);
         
-                return $req->execute($properties);
+                return $req->execute();
             }
     }
     
@@ -74,7 +71,6 @@ class ResourceModel implements ResourceModelInterface
         $sql = "SELECT * FROM $this->table";
         $req = Database::getBdd()->prepare($sql);
         $req->execute();
-
         return $req->fetchAll();
     }
 

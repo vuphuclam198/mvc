@@ -3,5 +3,8 @@
         "psr-4": {
             "Aht\\": ""
         }
+    },
+    "require": {
+        "nesbot/carbon": "^2.46"
     }
 }

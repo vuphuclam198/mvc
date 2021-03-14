@@ -6,14 +6,20 @@ use Aht\Core\Controller;
 use Aht\Models\TaskModel;
 use Aht\Models\TaskRepository;
 use Aht\Core\ResourceModel;
+use Carbon\Carbon;
 
 class TasksController extends Controller
 {
+    /* 
+    *@var taskRepository
+    */
 
     protected $taskRepository;
-
+    protected $date_now;
+    
     public function __construct(){
         $this->taskRepository = new taskRepository();
+        $this->date_now = Carbon::now('Asia/Ho_Chi_Minh');
     }   
 
     function index()
@@ -25,13 +31,14 @@ class TasksController extends Controller
 
     function create()
     {
+
         if (isset($_POST["title"]))
         {
 
             $task= new TaskModel();
             $task->setTitle($_POST["title"]);
             $task->setDesc($_POST["description"]);
-
+            $task->set_created_at($this->date_now);
             if ($this->taskRepository->add($task))
             {
                 header("Location: " . WEBROOT . "tasks/index");
@@ -44,6 +51,7 @@ class TasksController extends Controller
     function edit($id)
     {
         // list ọbject with getId();
+        
         $d["task"] = $this->taskRepository->get($id);
 
         if (isset($_POST["title"]))
@@ -52,7 +60,8 @@ class TasksController extends Controller
             $taskModel->setId($id);
             $taskModel->setTitle($_POST["title"]);
             $taskModel->setDesc($_POST["description"]);
-            
+            $taskModel->set_created_at($d['task']['created_at']);
+            $taskModel->set_update_at($this->date_now);
             if ($this->taskRepository->update($taskModel))
             {
                 header("Location: " . WEBROOT . "tasks/index");
