@@ -7,11 +7,11 @@ use Aht\Core\Model;
 class TaskModel extends Model
 {
     /* 
-    * var $id;
-    * var $title;
-    * var $description;
-    * var $created_at;
-    * var $updated_at;
+    * @var $id;
+    * @var $title;
+    * @var $description;
+    * @var $created_at;
+    * @var $updated_at;
     * method getId() is access ID
     */
 
